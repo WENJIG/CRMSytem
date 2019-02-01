@@ -1,0 +1,32 @@
+body {
+    background-image: url("/images/login/backgroud.png");
+    background-size: 100%;
+}
+
+#login_box {
+    width: 34%;
+    height: 34%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: 10%;
+    margin-top: -15%;
+}
+
+#login_box input {
+    width: 300px;
+    height: 30px;
+    margin-top: 20px;
+}
+
+#login_box button {
+    margin-top: 20px;
+}
+
+#content_left {
+    float: left;
+}
+
+#content_right {
+    float: left;
+}

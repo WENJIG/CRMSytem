@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>客户关系管理系统-登录</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/dist/css/zui.min.css"/>
+    <script type="javascript" src="/dist/lib/jquery/jquery.js"></script>
+    <script type="javascript" src="/dist/js/zui.min.js"></script>
+</head>
+<body>
+<div id="login_box">
+    <div class="page-header">
+        <h2> <span class="code">用户登录</span></h2>
+    </div>
+    <!--
+    <div id="content_left">
+        <img src="/images/login/logo.png" style="width: 330px; height: 300px;z-index: -1">
+    </div>
+    -->
+    <div id="content_right">
+        <img src="/images/login/oracle.png" style="width: 300px; height: 70px;">
+        <form th:action="@{/login/}" method="post">
+            <div class="input-control has-icon-left">
+                <input id="inputAccountExample1" type="text" class="form-control" placeholder="账户" name="account" autocomplete="off">
+                <label for="inputAccountExample1" class="input-control-icon-left"><i class="icon icon-user "></i></label>
+            </div>
+            <div class="input-control has-icon-left">
+                <input id="inputPasswordExample1" type="password" class="form-control" placeholder="密码" name="password">
+                <label for="inputPasswordExample1" class="input-control-icon-left"><i class="icon icon-key"></i></label>
+                <button id="forget_password" class="btn btn-link" type="button">忘记密码?</button>
+                <span th:if="${param.error}" style="color: red">用户名或密码错误。</span>
+            </div>
+            <button class="btn " type="submit" style="width: 200px;height: 30px"><i class="icon icon-shield"></i> 安全登录</button>
+            <button class="btn " type="reset" style="width: 100px;height: 30px"><i class="icon icon-spin icon-refresh"></i> 重置</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
