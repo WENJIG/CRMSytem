@@ -2,6 +2,8 @@ package cn.wenjig.crm;
 
 import cn.wenjig.crm.common.local.PermissionManage;
 import cn.wenjig.crm.common.local.SpringUtil;
+import cn.wenjig.crm.data.entity.Employee;
+import cn.wenjig.crm.repository.EmployeeRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;

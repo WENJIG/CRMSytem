@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/login")
-public class LoginWeb extends BaseWeb {
+public class LoginWeb {
 
     @RequestMapping(value = "/")
     public String getLoginView() {
         return "/login.html";
     }
+
 
 }
