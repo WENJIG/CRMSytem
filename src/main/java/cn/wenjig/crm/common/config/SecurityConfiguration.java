@@ -7,13 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * 配置spring Security , 这里使用了javaConfig实现, 而不使用xml
@@ -30,6 +32,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
     /**
      * 这里采用 PermissionServiceImpl来自定义认证服务, 自定义验证服务, 全局登录管理服务
      * @return PermissionServiceImpl 实现了 PermissionService, UserDetailsService, AuthenticationProvider
@@ -38,8 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // JdbcUserDetailsManager
         return PermissionManage.RUNTIME.getPermissionService();
     }
-
-
 
     /**
      * 将自定义的认证方式配置进 AuthenticationManagerBuilder
@@ -63,7 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                    .antMatchers("/login/", "/css/**", "/dist/**", "/images/**", "/js/**").permitAll()
+                    .antMatchers("/login/", "/css/**", "/dist/**", "/images/**", "/js/**", "/favicon.ico").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -74,10 +79,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .and()
                 .logout()
-                    .logoutUrl("/login/out")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/login/out", "GET"))
                     .logoutSuccessUrl("/login/")
+                    .invalidateHttpSession(true)
                     .permitAll()
                     .and()
+                .exceptionHandling()
+                    .accessDeniedPage("/exception/403")
+                    .and()
+                .sessionManagement()
+                    .invalidSessionUrl("/login/?repeatLog")
+                    .maximumSessions(1)
+                    .maxSessionsPreventsLogin(false)
+                    .sessionRegistry(sessionRegistry())
+                    .and()
+                .and()
                 .httpBasic();
 
     }

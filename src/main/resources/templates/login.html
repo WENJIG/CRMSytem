@@ -30,6 +30,7 @@
                 <label for="inputPasswordExample1" class="input-control-icon-left"><i class="icon icon-key"></i></label>
                 <button id="forget_password" class="btn btn-link" type="button">忘记密码?</button>
                 <span th:if="${param.error}" style="color: red">用户名或密码错误。</span>
+                <span th:if="${param.repeatLog}" style="color: red">你的身份信息已失效，请重新登录。</span>
             </div>
             <button class="btn " type="submit" style="width: 200px;height: 30px"><i class="icon icon-shield"></i> 安全登录</button>
             <button class="btn " type="reset" style="width: 100px;height: 30px"><i class="icon icon-spin icon-refresh"></i> 重置</button>

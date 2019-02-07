@@ -14,7 +14,7 @@ public class IndexWeb {
     @ResponseBody
     @RolesAllowed({"ROLE_超级管理员"})
     public String loadView() {
-        return "欢迎回来,超级管理员";
+        return "欢迎回来,超级管理员 <a href='/login/out'>注销登录</a>";
     }
 
 }

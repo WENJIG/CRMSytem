@@ -16,11 +16,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,12 +36,14 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
     private final EmployeeRepository employeeRepository;
     private final JobInfoRepository jobInfoRepository;
     private final PermissionRepository permissionRepository;
+    private final SessionRegistry sessionRegistry;
 
     @Autowired
-    private PermissionServiceImpl(EmployeeRepository employeeRepository, JobInfoRepository jobInfoRepository, PermissionRepository permissionRepository) {
+    private PermissionServiceImpl(EmployeeRepository employeeRepository, JobInfoRepository jobInfoRepository, PermissionRepository permissionRepository, SessionRegistry sessionRegistry) {
         this.employeeRepository = employeeRepository;
         this.jobInfoRepository = jobInfoRepository;
         this.permissionRepository = permissionRepository;
+        this.sessionRegistry = sessionRegistry;
     }
 
     /**
@@ -126,25 +132,55 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
     }
 
     /**
-     * @Description: 登录成功以后进行签到, 确认已经登录
+     * @Description: 是否已经登录
+     * @param uid
+     * @Return boolean
+     */
+    @Override
+    public boolean isLogin(long uid) {
+        return uidMap.containsKey(uid) && sidMap.containsKey(uidMap.get(uid));
+    }
+
+    /**
+     * @Description: 登录成功以后进行签到, 将已经认证的 sessionId 与 uid 保存
      * @param uid, sid
      * @Return void
      */
     @Override
     public void checkIn(long uid, String sid) {
+        if (isLogin(uid)) {
+            logout(uid);
+        }
         uidMap.put(uid, sid);
         sidMap.put(sid, uid);
     }
 
     /**
-     * @Description: 登录验证完成后 以及 注销时调用
-     * @param sid
+     * @Description: 用于踢出用户
+     * @param uid
      * @Return void
      */
     @Override
-    public void logout(String sid) {
-        uidMap.remove(sidMap.get(sid));
-        sidMap.remove(sid);
+    public void logout(long uid) {
+
+        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+        for (Object allPrincipal : allPrincipals) {
+            User user = (User) allPrincipal;
+            if (user.getUsername().equals(employeeRepository.findById(uid).getEmail())) {
+                List<SessionInformation> allSessions = sessionRegistry.getAllSessions(user, false);
+                if (allSessions != null) {
+                    for (SessionInformation sessionInformation : allSessions) {
+                        // 这里只需要让该session到期就可以了 ConcurrentSessionFilter会执行用户注销时的步骤
+                        sessionInformation.expireNow();
+                        //sessionRegistry.removeSessionInformation(sessionInformation.getSessionId());
+                    }
+                }
+            }
+        }
+
+        sidMap.remove(uidMap.get(uid));
+        uidMap.remove(uid);
+
     }
 
     /**
@@ -181,7 +217,7 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
 
     /**
      * @Description: 自定义验证服务
-     *               验证服务可配置多个, 然后根据投票规则(可自定义, 一票通过或者一票否决, 少数服从多数等)
+     *               P:权限验证服务可配置多个, 然后根据投票规则(可自定义, 一票通过或者一票否决, 少数服从多数等)
      *               来决定是否通过验证, 我这里只自定义了一个(本类)
      *               使用场景: 外部账户, Token 之类的需要支持其他验证方式时
      * @param authentication
@@ -193,6 +229,11 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
         String password = (String) authentication.getCredentials();
         UserDetails user = loadUserByUsername(account);
         if (!("{noop}" + MD5Util.md5Encode(password)).equals(user.getPassword())) throw new BadCredentialsException("密码错误");
+
+        // 执行session 会话管理, 如果没有登录的将信息添加, 将已经登录的踢出, 禁止重复登录
+        String sessionId = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getSession().getId();
+        checkIn(employeeRepository.findByName(account).getId(),sessionId);
+
 
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         return new UsernamePasswordAuthenticationToken(user, password, authorities);

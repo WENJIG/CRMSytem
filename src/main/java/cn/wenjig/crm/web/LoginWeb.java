@@ -12,5 +12,4 @@ public class LoginWeb {
         return "/login.html";
     }
 
-
 }

@@ -12,8 +12,10 @@ public interface PermissionService {
 
     void checkIn(long uid, String sid);
 
-    void logout(String sid);
+    void logout(long uid);
 
     void reload();
+
+    boolean isLogin(long uid);
 
 }
