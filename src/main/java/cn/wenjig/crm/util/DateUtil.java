@@ -13,8 +13,17 @@ public class DateUtil {
      */
     public static String getSystemDate() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String dateTime = df.format(new Date());
-        return dateTime;
+        return df.format(new Date());
+    }
+
+    /**
+     * @param []
+     * @Description: 将时钟转换为yyyy-mm-dd HH:mm:ss类型的时间
+     * @Return java.lang.String
+     */
+    public static String changeToDateString1(long time) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(time);
     }
 
     /**
@@ -22,16 +31,19 @@ public class DateUtil {
      * @Description: 返回本机系统的更精确的yyyy-mm-dd HH:mm:ss类型的时间
      * @Return java.lang.String
      */
-    public static String getSystemPreciseDate() {
+    public static String getSystemPreciseDate1() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateTime = df.format(new Date());
-        return dateTime;
+        return df.format(new Date());
     }
 
-    public static String getSystemPreciseDate(String str) {
+    /**
+     * @param []
+     * @Description: 返回本机系统的更精确的yyyyMMddHHmmss类型的时间戳
+     * @Return java.lang.String
+     */
+    public static String getSystemPreciseDate2() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String dateTime = df.format(new Date());
-        return dateTime;
+        return df.format(new Date());
     }
 
     /**
@@ -44,8 +56,7 @@ public class DateUtil {
         currentTimeMillis += 5 * 60 * 1000;
         Date date = new Date(currentTimeMillis);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateTime = df.format(date);
-        return dateTime;
+        return df.format(date);
     }
 
     /**
@@ -63,11 +74,7 @@ public class DateUtil {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        if (dateFront.getTime() < dateAfter.getTime()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (dateFront.getTime() < dateAfter.getTime());
     }
 
     /**

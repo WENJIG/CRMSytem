@@ -18,4 +18,8 @@ public interface PermissionService {
 
     boolean isLogin(long uid);
 
+    long getId(String name);
+
+    String getName(long id);
+
 }

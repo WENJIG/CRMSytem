@@ -1,6 +1,6 @@
 package cn.wenjig.crm.common.config;
 
-import cn.wenjig.crm.common.local.PermissionManage;
+import cn.wenjig.crm.common.enums.PermissionManage;
 import cn.wenjig.crm.service.PermissionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

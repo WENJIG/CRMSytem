@@ -1,5 +1,6 @@
-package cn.wenjig.crm.common.local;
+package cn.wenjig.crm.common.enums;
 
+import cn.wenjig.crm.common.local.SpringUtil;
 import cn.wenjig.crm.service.PermissionService;
 import cn.wenjig.crm.service.impl.PermissionServiceImpl;
 

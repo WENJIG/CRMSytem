@@ -1,13 +1,14 @@
 package cn.wenjig.crm;
 
-import cn.wenjig.crm.common.local.PermissionManage;
+import cn.wenjig.crm.common.enums.LogManage;
+import cn.wenjig.crm.common.enums.PermissionManage;
 import cn.wenjig.crm.common.local.SpringUtil;
-import cn.wenjig.crm.data.entity.Employee;
-import cn.wenjig.crm.repository.EmployeeRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Scanner;
 
 @ServletComponentScan
 @SpringBootApplication
@@ -17,7 +18,20 @@ public class CrmApplication {
         ApplicationContext app = SpringApplication.run(CrmApplication.class, args);
         SpringUtil springUtil = new SpringUtil();
         springUtil.setApplicationContext(app);
+        init();
+
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            int exit = input.nextInt();
+            if (exit == 1008611) {
+                System.exit(0);
+            }
+        }
+    }
+
+    private static void init() {
         PermissionManage.RUNTIME.getPermissionService().init();
+        LogManage.LOG.getLog().init();
     }
 
 }

@@ -30,6 +30,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+/**
+ *  用户服务
+ */
 @Service
 public final class PermissionServiceImpl implements PermissionService, UserDetailsService, AuthenticationProvider {
 
@@ -47,12 +50,12 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
     }
 
     /**
-     *  key : 员工ID, Value : sessionID
-     *  Key : sessionID, Value : 员工ID
-     *  两个MAP互相维护, 保证登录员工的唯一性。
+     *  key : 员工ID, Value : 用户名
+     *  Key : 用户名, Value : 员工ID
+     *  用于管理以及登录的用户
      */
     private ConcurrentHashMap<Long, String> uidMap = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Long> sidMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Long> nameMap = new ConcurrentHashMap<>();
 
     /**
      *  Key : 员工id, Value : 职位
@@ -138,7 +141,17 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
      */
     @Override
     public boolean isLogin(long uid) {
-        return uidMap.containsKey(uid) && sidMap.containsKey(uidMap.get(uid));
+        return uidMap.containsKey(uid) && nameMap.containsKey(uidMap.get(uid));
+    }
+
+    @Override
+    public long getId(String name) {
+        return nameMap.get(name);
+    }
+
+    @Override
+    public String getName(long id) {
+        return uidMap.get(id);
     }
 
     /**
@@ -147,12 +160,12 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
      * @Return void
      */
     @Override
-    public void checkIn(long uid, String sid) {
+    public void checkIn(long uid, String name) {
         if (isLogin(uid)) {
             logout(uid);
         }
-        uidMap.put(uid, sid);
-        sidMap.put(sid, uid);
+        uidMap.put(uid, name);
+        nameMap.put(name, uid);
     }
 
     /**
@@ -178,7 +191,7 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
             }
         }
 
-        sidMap.remove(uidMap.get(uid));
+        nameMap.remove(uidMap.get(uid));
         uidMap.remove(uid);
 
     }
@@ -230,10 +243,9 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
         UserDetails user = loadUserByUsername(account);
         if (!("{noop}" + MD5Util.md5Encode(password)).equals(user.getPassword())) throw new BadCredentialsException("密码错误");
 
-        // 执行session 会话管理, 如果没有登录的将信息添加, 将已经登录的踢出, 禁止重复登录
-        String sessionId = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getSession().getId();
-        checkIn(employeeRepository.findByName(account).getId(),sessionId);
-
+        // 执行session 会话管理, 如果没有登录的将登录信息添加, 将已经登录的上一个会话踢出, 禁止重复登录
+        Employee employee = employeeRepository.findByName(account);
+        checkIn(employee.getId(), employee.getEmail());
 
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         return new UsernamePasswordAuthenticationToken(user, password, authorities);
