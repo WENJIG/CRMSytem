@@ -10,8 +10,6 @@ import java.util.Set;
 @Repository
 public interface JobInfoRepository extends JpaRepository<JobInfo, Long> {
 
-    @Query(nativeQuery = true, value = "select job_id from employee_job where employee_id=?1")
-    Set<Integer> findJobByEmployeeId(long id);
-
     JobInfo findById(long id);
+
 }

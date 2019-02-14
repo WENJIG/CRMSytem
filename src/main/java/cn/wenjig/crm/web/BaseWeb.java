@@ -1,5 +1,6 @@
 package cn.wenjig.crm.web;
 
+import cn.wenjig.crm.common.enums.PermissionManage;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,10 @@ public class BaseWeb {
         SecurityContext ctx = SecurityContextHolder.getContext();
         Authentication auth = ctx.getAuthentication();
         return (User) auth.getPrincipal();
+    }
+
+    protected long getId(String name) {
+        return PermissionManage.RUNTIME.getPermissionService().getId(name);
     }
 
 }

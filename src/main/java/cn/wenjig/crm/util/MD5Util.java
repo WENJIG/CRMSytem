@@ -4,16 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * 将信息摘要 以保证信息完整性
+ * 将信息摘要,或加密
  */
 public class MD5Util {
 
+    /**
+     * @Description: 32位MD5 (会将一串额外的字符加入,一定程度上防解密???)
+     * @param inStr
+     * @Return java.lang.String
+     */
     public static String md5Encode(String inStr) {
-        /**
-          * @Description: 32位MD5 (会将一串额外的字符加入,一定程度上防解密???)
-          * @param [inStr]
-          * @Return java.lang.String
-          */
         MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
@@ -33,10 +33,6 @@ public class MD5Util {
             hexValue.append(Integer.toHexString(val));
         }
         return hexValue.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(md5Encode("schiller"));
     }
 
 }

@@ -3,9 +3,7 @@ package cn.wenjig.crm.service.impl;
 import cn.wenjig.crm.data.entity.Employee;
 import cn.wenjig.crm.data.entity.JobInfo;
 import cn.wenjig.crm.data.entity.Permission;
-import cn.wenjig.crm.repository.EmployeeRepository;
-import cn.wenjig.crm.repository.JobInfoRepository;
-import cn.wenjig.crm.repository.PermissionRepository;
+import cn.wenjig.crm.repository.*;
 import cn.wenjig.crm.service.PermissionService;
 import cn.wenjig.crm.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,14 +35,18 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
     private final EmployeeRepository employeeRepository;
     private final JobInfoRepository jobInfoRepository;
     private final PermissionRepository permissionRepository;
+    private final EoJRepository eoJRepository;
+    private final JoPRepository joPRepository;
     private final SessionRegistry sessionRegistry;
 
     @Autowired
-    private PermissionServiceImpl(EmployeeRepository employeeRepository, JobInfoRepository jobInfoRepository, PermissionRepository permissionRepository, SessionRegistry sessionRegistry) {
+    private PermissionServiceImpl(EmployeeRepository employeeRepository, JobInfoRepository jobInfoRepository, PermissionRepository permissionRepository, SessionRegistry sessionRegistry, EoJRepository eoJRepository, JoPRepository joPRepository) {
         this.employeeRepository = employeeRepository;
         this.jobInfoRepository = jobInfoRepository;
         this.permissionRepository = permissionRepository;
         this.sessionRegistry = sessionRegistry;
+        this.eoJRepository = eoJRepository;
+        this.joPRepository = joPRepository;
     }
 
     /**
@@ -100,14 +100,14 @@ public final class PermissionServiceImpl implements PermissionService, UserDetai
                 /**
                  * 加载 job <---> permission 关系 jApMap
                  */
-                for (long jobId : jobInfoRepository.findJobByEmployeeId(employee.getId())) {
+                for (long jobId : eoJRepository.findJobByEmployeeId(employee.getId())) {
                     JobInfo job = jobInfoRepository.findById(jobId);
                     jobInfoSet.add(job);
 
                     ConcurrentSkipListSet<Permission> permissionSet = new ConcurrentSkipListSet<>(
                             (Permission p1, Permission p2) -> p1.equals(p2) ? 0 : -1
                     );
-                    for (long permissionId : permissionRepository.findByJobId(jobId)) {
+                    for (long permissionId : joPRepository.findByJobId(jobId)) {
                         Permission permission = permissionRepository.findById(permissionId);
                         permissionSet.add(permission);
                     }

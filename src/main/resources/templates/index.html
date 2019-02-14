@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>客户关系管理系统-首页</title>
+    <title th:text="${indexPageTitle} + '的首页'">首页</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/zui.min.css}" href="../static/dist/css/zui.min.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/lib/datagrid/zui.datagrid.min.css}"
+          href="../static/dist/lib/datagrid/zui.datagrid.min.css"/>
+    <script th:src="@{/dist/lib/jquery/jquery.js}" src="../static/dist/lib/jquery/jquery.js"></script>
+    <script th:src="@{/dist/js/zui.min.js}" src="../static/dist/js/zui.min.js"></script>
+    <script th:src="@{/dist/lib/datagrid/zui.datagrid.min.js}"
+            src="../static/dist/lib/datagrid/zui.datagrid.min.js"></script>
 </head>
 <body>
+<div id="customTabs">
+    <ul class="nav nav-tabs" th:each="job: ${myJobs}">
+        <li class="active"><a data-tab th:href="${'#tabContent' + job.id}" th:text="${job.job}"></a></li>
+    </ul>
+    <div class="tab-content" th:each="job: ${myJobs}">
+        <div class="tab-pane active" th:id="${'tabContent' + job.id}">
+            <p th:text="${'我的职位:' + job.job}"></p>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
 
+</script>
 </body>
 </html>
