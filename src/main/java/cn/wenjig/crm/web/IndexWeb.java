@@ -1,8 +1,8 @@
 package cn.wenjig.crm.web;
 
-import cn.wenjig.crm.data.entity.Employee;
+import cn.wenjig.crm.common.annotation.SystemLog;
+import cn.wenjig.crm.common.enums.OperationType;
 import cn.wenjig.crm.data.entity.JobInfo;
-import cn.wenjig.crm.repository.JobInfoRepository;
 import cn.wenjig.crm.service.EmployeeService;
 import cn.wenjig.crm.service.JobInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.security.RolesAllowed;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/index")
@@ -33,15 +31,17 @@ public class IndexWeb extends BaseWeb {
     }
 
     @RolesAllowed({"ROLE_在职员工"})
+    @SystemLog(description = "登录成功！重定向到自己的主页")
     @RequestMapping(value = "/")
     public String redirectLoadView() throws UnsupportedEncodingException {
         return "redirect:/index/" + java.net.URLEncoder.encode(getUser().getUsername(), "UTF-8");
     }
 
     @RolesAllowed({"ROLE_在职员工"})
+    @SystemLog(description = "加载自己的主页", level = 1, operationType = OperationType.SELECT)
     @RequestMapping(value = "/{account}")
     public String loadView(@PathVariable String account, Model model) {
-        if (!account.equals(getUser().getUsername())) {
+        if (isMe(account)) {
             return "redirect:/exception/403";
         }
         model.addAttribute("indexPageTitle", account);
@@ -51,6 +51,23 @@ public class IndexWeb extends BaseWeb {
 
 
         return "index.html";
+    }
+
+    /*
+    @ResponseBody
+    @RolesAllowed({"ROLE_超级管理员"})
+    @SystemLog(description = "加载超级管理员的工作区", level = 7, operationType = OperationType.SELECT)
+    @RequestMapping(value = "/{account}/超级管理员", method = RequestMethod.POST)
+    public String loadWorkContentSuperAdmin(@PathVariable String account) {
+        if (isMe(account)) {
+            return "redirect:/exception/403";
+        }
+
+    }
+    */
+
+    private boolean isMe(String account) {
+        return !account.equals(getUser().getUsername());
     }
 
 }

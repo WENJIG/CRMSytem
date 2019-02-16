@@ -3,27 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${indexPageTitle} + '的首页'">首页</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/zui.min.css}" href="../static/dist/css/zui.min.css"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/dist/lib/datagrid/zui.datagrid.min.css}"
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" th:href="@{/css/index.css}" href="../static/css/index.css">
+    <link rel="stylesheet" th:href="@{/dist/css/zui.min.css}" href="../static/dist/css/zui.css"/>
+    <link rel="stylesheet" th:href="@{/dist/lib/datagrid/zui.datagrid.min.css}"
           href="../static/dist/lib/datagrid/zui.datagrid.min.css"/>
     <script th:src="@{/dist/lib/jquery/jquery.js}" src="../static/dist/lib/jquery/jquery.js"></script>
     <script th:src="@{/dist/js/zui.min.js}" src="../static/dist/js/zui.min.js"></script>
     <script th:src="@{/dist/lib/datagrid/zui.datagrid.min.js}"
             src="../static/dist/lib/datagrid/zui.datagrid.min.js"></script>
+    <script th:src="@{/js/index.js}" src="../static/js/index.js"></script>
 </head>
 <body>
-<div id="customTabs">
-    <ul class="nav nav-tabs" th:each="job: ${myJobs}">
-        <li class="active"><a data-tab th:href="${'#tabContent' + job.id}" th:text="${job.job}"></a></li>
-    </ul>
-    <div class="tab-content" th:each="job: ${myJobs}">
-        <div class="tab-pane active" th:id="${'tabContent' + job.id}">
-            <p th:text="${'我的职位:' + job.job}"></p>
+<ul class="nav nav-secondary">
+    <li class="nav-heading">
+        <i class="icon icon-user"></i>
+        <span th:text="${' ' + indexPageTitle + ' '}"></span>
+        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#logoutModal">注销</button>
+    </li>
+    <li class="active">
+        <a th:href="${'/index/' + indexPageTitle}">我的首页</a>
+    </li>
+    <li>
+        <a class="dropdown-toggle" data-toggle="dropdown">我的职位 <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <div th:each="job,jobStatu : ${myJobs}" class="btn btn-link">
+                <li>
+                    <i class="icon icon-share-alt"></i>
+                    <a th:text="${job.job}"></a>
+                </li>
+            </div>
+        </ul>
+    </li>
+    <li>
+        <a th:href="@{/news/}">新闻热点</a>
+    </li>
+    <li>
+        <a onclick="about()">联系作者</a>
+    </li>
+</ul>
+<div class="panel" id="includeWork">
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li th:each="job,jobstatus : ${myJobs}">
+                <a data-tab th:href="${'#tabContent' + job.id}" th:text="${job.job}"></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div th:each="job,jobstatus : ${myJobs}" class="tab-pane" th:id="${'tabContent' + job.id}">
+                <p th:text="${job.job}"></p>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <span>四大从来都遍满，此间风水何疑。故应为我发新诗。幽花香涧谷，寒藻舞沦漪。天仙未必相思。还凭流水送人归。晨巅余落日，草露已沾衣。 </span>
+    </div>
+</div>
+<!-- 对话框,需要点击按钮触发 -->
+<div class="modal fade" id="logoutModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">系统提示</h4>
+            </div>
+            <div class="modal-body">
+                <p>是否注销账号?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="window.location='/login/out'">确认</button>
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-
 </script>
 </body>
 </html>

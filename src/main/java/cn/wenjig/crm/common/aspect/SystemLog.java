@@ -1,6 +1,5 @@
 package cn.wenjig.crm.common.aspect;
 
-import cn.wenjig.crm.common.annotation.SystemLogAnnotation;
 import cn.wenjig.crm.common.enums.PermissionManage;
 import cn.wenjig.crm.common.local.thread.LogThread;
 import cn.wenjig.crm.data.entity.LogInfo;
@@ -28,7 +27,7 @@ public class SystemLog {
     /**
      * 此处的切面类切点是被打上了SystemLogAnnotation注解的方法
      */
-    @Pointcut(value = "@annotation(cn.wenjig.crm.common.annotation.SystemLogAnnotation)")
+    @Pointcut(value = "@annotation(cn.wenjig.crm.common.annotation.SystemLog)")
     public void baseLog(){}
 
     /**
@@ -92,7 +91,7 @@ public class SystemLog {
         logInfo.setReturnValue(JsonUtil.toJson(res));
 
         // 将注解中的值set进本次日志对象
-        SystemLogAnnotation annotation = signature.getMethod().getAnnotation(SystemLogAnnotation.class);
+        cn.wenjig.crm.common.annotation.SystemLog annotation = signature.getMethod().getAnnotation(cn.wenjig.crm.common.annotation.SystemLog.class);
         if(annotation != null){
             logInfo.setDescription(annotation.description());
             logInfo.setLevel(annotation.level());
