@@ -1,9 +1,9 @@
 package cn.wenjig.crm.common.local.thread;
 
 import cn.wenjig.crm.data.entity.LogInfo;
-import cn.wenjig.crm.util.JsonUtil;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.*;
 
@@ -58,10 +58,10 @@ public class LogThread {
 
     }
 
-    private void printToConsole() {
-        for (LogInfo logInfo : logInfoQueue) {
-            System.out.println(JsonUtil.toJson(logInfo));
-        }
+    public LinkedList<LogInfo> getByRam() {
+        LinkedList<LogInfo> logList = new LinkedList();
+        logList.addAll(logInfoQueue);
+        return logList;
     }
 
 }

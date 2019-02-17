@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 拥有超级管理员职位时加载 -->
+<div id="inc-su-admin" th:fragment="超级管理员">
+    <div id="inc-su-admin-btn-group">
+        <div class="dropdown">
+            <button class="btn" type="button" data-toggle="dropdown"><i class="icon icon-user"></i> 员工管理 <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a href="###">查看员工</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###">查看所有</a></li>
+                        <li><a href="###">按ID查看</a></li>
+                        <li><a href="###">按账户查看</a></li>
+                        <li><a href="###">按部门查看</a></li>
+                        <li><a href="###">按职位查看</a></li>
+                        <li><a href="###">按权限查看</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a href="###">修改员工信息</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###">添加一位新员工</a></li>
+                        <li class="dropdown-submenu">
+                            <a href="###">修改员工信息/密码</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="###">按ID修改</a></li>
+                                <li><a href="###">按账户修改</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="###">离职/删除</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="###">离职</a></li>
+                                <li><a href="###">直接删除 <i class="icon icon-exclamation-sign"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn" type="button" data-toggle="dropdown"><i class="icon icon-group"></i> 职位管理 <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a href="###">查看职位</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###">查看所有</a></li>
+                        <li><a href="###">按账户查看</a></li>
+                        <li><a href="###">按部门查看</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu">
+                    <a href="###">职位 新增/绑定/修改 </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###">新增一个职位</a></li>
+                        <li class="dropdown-submenu">
+                            <a href="###">将职位绑定给一位员工</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="###">按ID修改</a></li>
+                                <li><a href="###">按账户修改</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a href="###">离职/删除</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="###">离职</a></li>
+                                <li><a href="###">直接删除 <i class="icon icon-warning-sign"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn" type="button" data-toggle="dropdown"><i class="icon icon-file-text-o"></i> 日志管理 <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a href="###">查看日志</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="###">从数据库查看</a></li>
+                        <li><a onclick="readLogByServerRAM()">从服务器查看(内存)</a></li>
+                        <li><a href="###">从服务器查看(本地)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="inc-su-admin-context">
+        <div id="inc-su-admin-context-data"></div>
+    </div>
+</div>
+<!-- 拥有线下咨询师职位时加载 -->
+<div id="inc-advisory" th:fragment="线下咨询师">
+    <div class="dropdown">
+        <button class="btn" type="button" data-toggle="dropdown">线下咨询 <span class="caret"></span></button>
+    </div>
+</div>
+</body>
+</html>

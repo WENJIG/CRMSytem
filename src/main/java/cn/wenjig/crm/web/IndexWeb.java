@@ -49,22 +49,8 @@ public class IndexWeb extends BaseWeb {
         List<JobInfo> myJobs = jobInfoService.findAllJobByEmployeeId(getId(getUser().getUsername()));
         model.addAttribute("myJobs", myJobs);
 
-
         return "index.html";
     }
-
-    /*
-    @ResponseBody
-    @RolesAllowed({"ROLE_超级管理员"})
-    @SystemLog(description = "加载超级管理员的工作区", level = 7, operationType = OperationType.SELECT)
-    @RequestMapping(value = "/{account}/超级管理员", method = RequestMethod.POST)
-    public String loadWorkContentSuperAdmin(@PathVariable String account) {
-        if (isMe(account)) {
-            return "redirect:/exception/403";
-        }
-
-    }
-    */
 
     private boolean isMe(String account) {
         return !account.equals(getUser().getUsername());

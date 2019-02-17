@@ -51,7 +51,7 @@
         </ul>
         <div class="tab-content">
             <div th:each="job,jobstatus : ${myJobs}" class="tab-pane" th:id="${'tabContent' + job.id}">
-                <p th:text="${job.job}"></p>
+                <div th:replace="include.html :: (${job.job})"></div>
             </div>
         </div>
     </div>
