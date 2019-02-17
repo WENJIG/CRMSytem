@@ -88,7 +88,6 @@ public class SystemLog {
         logInfo.setEndTime(DateUtil.changeToDateString1(endTime));
         logInfo.setRunTime(runTime);
         logInfo.setArgs(JsonUtil.toJson(joinPoint.getArgs()));
-        logInfo.setReturnValue(JsonUtil.toJson(res));
 
         // 将注解中的值set进本次日志对象
         cn.wenjig.crm.common.annotation.SystemLog annotation = signature.getMethod().getAnnotation(cn.wenjig.crm.common.annotation.SystemLog.class);
@@ -96,6 +95,10 @@ public class SystemLog {
             logInfo.setDescription(annotation.description());
             logInfo.setLevel(annotation.level());
             logInfo.setOperating_type(annotation.operationType().getValue());
+            // 有些返回值太大, 比如查看日志多次, 这样的请求就不记录返回值了, 像滚雪球一样
+            if (annotation.isLogReturn()) {
+                logInfo.setReturnValue(JsonUtil.toJson(res));
+            }
         }
         // 将日志加入日志队列, 以便进行后续的扩展操作
         logThread.addLogInfo(logInfo);

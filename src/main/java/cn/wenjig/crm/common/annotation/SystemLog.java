@@ -17,4 +17,6 @@ public @interface SystemLog {
 
     OperationType operationType() default OperationType.UNKNOWN;
 
+    boolean isLogReturn() default true;
+
 }

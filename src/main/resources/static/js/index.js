@@ -28,7 +28,7 @@ function readLogByServerRAM() {
         type: 'POST',
         url: "/log/readByRam",
         data: null,
-        dataType: "json",
+        dataType: "text",
         success: function (data, textStatus) {
             $("#inc-su-admin-context-data").html("<div id='inc-su-admin-context-data'><div id='datagridExample' class='datagrid'></div></div>");
             $('#datagridExample').datagrid({
@@ -55,12 +55,12 @@ function readLogByServerRAM() {
                     icon: 'frown'
                 }).show();
                 break;
-                default : new $.zui.Messager("服务器拒绝了你的访问", {
+                default : new $.zui.Messager("服务器拒绝了你的访问:" + textStatus, {
                     icon: 'frown'
                 }).show();
                 break;
             }
-
+            $("#exp-text").text(errorThrown);
         }
     });
 }

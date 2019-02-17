@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class LogWeb {
 
     @RolesAllowed({"ROLE_超级管理员"})
-    @SystemLog(description = "从内存中查看日志(还未被写入数据库)", level = 4, operationType = OperationType.SELECT)
+    @SystemLog(description = "从内存中查看日志(还未被写入数据库)", isLogReturn = false, level = 4, operationType = OperationType.SELECT)
     @RequestMapping(value = "/readByRam", method = RequestMethod.POST)
     @ResponseBody
     public String readLogByRam() {

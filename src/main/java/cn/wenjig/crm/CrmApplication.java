@@ -20,6 +20,7 @@ public class CrmApplication {
         springUtil.setApplicationContext(app);
         init();
 
+        /*
         Scanner input = new Scanner(System.in);
         while (true) {
             int exit = input.nextInt();
@@ -27,6 +28,7 @@ public class CrmApplication {
                 System.exit(0);
             }
         }
+        */
     }
 
     private static void init() {
