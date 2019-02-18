@@ -6,6 +6,7 @@ import cn.wenjig.crm.common.enums.OperationType;
 import cn.wenjig.crm.common.local.thread.LogThread;
 import cn.wenjig.crm.data.entity.LogInfo;
 import cn.wenjig.crm.util.JsonUtil;
+import cn.wenjig.crm.web.BaseWeb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 
 @Controller
 @RequestMapping(value = "/log")
-public class LogWeb {
+public class LogWeb extends BaseWeb {
 
     @RolesAllowed({"ROLE_超级管理员"})
     @SystemLog(description = "从内存中查看日志(还未被写入数据库)", isLogReturn = false, level = 4, operationType = OperationType.SELECT)

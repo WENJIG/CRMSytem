@@ -14,7 +14,7 @@
                 <li class="dropdown-submenu">
                     <a href="###">查看员工</a>
                     <ul class="dropdown-menu">
-                        <li><a href="###">查看所有</a></li>
+                        <li><a onclick="findAllEmp();">查看所有</a></li>
                         <li><a href="###">按ID查看</a></li>
                         <li><a href="###">按账户查看</a></li>
                         <li><a href="###">按部门查看</a></li>
@@ -25,7 +25,7 @@
                 <li class="dropdown-submenu">
                     <a href="###">修改员工信息</a>
                     <ul class="dropdown-menu">
-                        <li><a href="###">添加一位新员工</a></li>
+                        <li><a data-toggle="modal" data-target="#inc-su-admin-emp-add">添加一位新员工</a></li>
                         <li class="dropdown-submenu">
                             <a href="###">修改员工信息/密码</a>
                             <ul class="dropdown-menu">
@@ -84,7 +84,7 @@
                     <a href="###">查看日志</a>
                     <ul class="dropdown-menu">
                         <li><a href="###">从数据库查看</a></li>
-                        <li><a onclick="readLogByServerRAM()">从服务器查看(内存)</a></li>
+                        <li><a onclick="readLogByServerRAM();">从服务器查看(内存)</a></li>
                         <li><a href="###">从服务器查看(本地)</a></li>
                     </ul>
                 </li>
@@ -93,6 +93,55 @@
     </div>
     <div id="inc-su-admin-context">
         <div id="inc-su-admin-context-data"></div>
+    </div>
+    <div class="modal fade" id="inc-su-admin-emp-add">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">添加一位新员工</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-account" type="text" class="form-control" placeholder="账户(邮箱)" name="account" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="账户必须是正确的邮箱格式"><i class="icon icon-info-sign"></i></label>
+                    </div>
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-pwd" type="password" class="form-control" placeholder="密码" name="password" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-pwd" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="密码长度必须大于8并且小于16"><i class="icon icon-info-sign"></i></label>
+                    </div>
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-nick" type="text" class="form-control" placeholder="昵称" name="nickname" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-nick" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="昵称长度必须大于1并且小于16"><i class="icon icon-info-sign"></i></label>
+
+                    </div>
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-real" type="text" class="form-control" placeholder="真实姓名" name="realname" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-real" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="真实姓名长度必须大于1并且小于16"><i class="icon icon-info-sign"></i></label>
+
+                    </div>
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-phone" type="text" class="form-control" placeholder="电话号码" name="phoneNo" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-phone" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="电话号码长度必须大于11并且小于30"><i class="icon icon-info-sign"></i></label>
+
+                    </div>
+                    <div class="input-control has-icon-left" style="margin-top: 5px">
+                        <input id="inc-su-admin-emp-add-officeTel" type="text" class="form-control" placeholder="办公电话" name="officeTel" autocomplete="off">
+                        <label for="inc-su-admin-emp-add-officeTel" class="input-control-icon-left"><i class="icon icon-pencil"></i></label>
+                        <label for="inc-su-admin-emp-add-account" class="input-control-icon-right" data-toggle="tooltip" data-placement="right" title="办公电话长度必须大于1并且小于30"><i class="icon icon-info-sign"></i></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="addEmp();">保存</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- 拥有线下咨询师职位时加载 -->

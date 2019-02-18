@@ -1,6 +1,7 @@
 package cn.wenjig.crm.common.local.thread;
 
 import cn.wenjig.crm.data.entity.LogInfo;
+import cn.wenjig.crm.util.DateUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -22,7 +23,7 @@ public class LogThread {
         scheduledThreadPool = Executors.newScheduledThreadPool(4);
 
         scheduledThreadPool.scheduleAtFixedRate(() -> {
-            System.out.println(Thread.currentThread().getName() + "日志写入开始:***********************************************************************");
+            System.out.println(DateUtil.getSystemPreciseDate1() + " " + Thread.currentThread().getName() + "日志写入开始:***********************************************************************");
             try {
                 // 可能会出现问题的地方，例如事务回滚
                 if (!logInfoQueue.isEmpty()) {
@@ -32,7 +33,7 @@ public class LogThread {
                 e.printStackTrace();
                 // 处理一下
             }
-            System.out.println(Thread.currentThread().getName() + "日志写入完成:***********************************************************************");
+            System.out.println(DateUtil.getSystemPreciseDate1() + " " + Thread.currentThread().getName() + "日志写入完成:***********************************************************************");
         }, 0, 5, TimeUnit.MINUTES);
     }
 
