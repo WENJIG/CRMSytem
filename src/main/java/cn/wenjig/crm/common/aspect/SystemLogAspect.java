@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class SystemLog {
+public class SystemLogAspect {
 
     private final LogThread logThread;
 
     @Autowired
-    public SystemLog(LogThread logThread) {
+    public SystemLogAspect(LogThread logThread) {
         this.logThread = logThread;
     }
 

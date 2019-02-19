@@ -83,10 +83,13 @@
                 <li class="dropdown-submenu">
                     <a href="###">查看日志</a>
                     <ul class="dropdown-menu">
-                        <li><a href="###">从数据库查看</a></li>
+                        <li><a onclick="readLogByServerDB();">从数据库查看</a></li>
                         <li><a onclick="readLogByServerRAM();">从服务器查看(内存)</a></li>
                         <li><a href="###">从服务器查看(本地)</a></li>
                     </ul>
+                </li>
+                <li>
+                    <a onclick="writeLogNowToDB();">立即将日志(内存)写入至数据库</a>
                 </li>
             </ul>
         </div>
