@@ -76,7 +76,7 @@ public class LogThread {
                 stringBuilder.append("失败！失败个数: ").append(backup.size());
                 System.err.println(stringBuilder.toString());
             }
-        }, 0, 5, TimeUnit.MINUTES);
+        }, 0, 15, TimeUnit.MINUTES);
     }
 
     /**
@@ -87,7 +87,12 @@ public class LogThread {
     private Queue<LogInfo> writeToDB() throws Exception {
         Queue<LogInfo> logInfos = new ConcurrentLinkedQueue<>(logInfoQueue);
         logInfoQueue.clear();
-        systemLogService.addLog(logInfos);
+        try {
+            systemLogService.addLog(logInfos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return logInfos;
+        }
         return logInfos;
     }
 

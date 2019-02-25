@@ -43,11 +43,16 @@ public class LogWeb extends BaseWeb {
     @SystemLog(description = "从数据库中查看日志", isLogReturn = false, level = 5, operationType = OperationType.SELECT)
     @RequestMapping(value = "/readByDB", method = RequestMethod.POST)
     @ResponseBody
-    public String readLogByDB(@RequestParam(name = "start", required = false, defaultValue = "0")
+    public String readLogByDB(@RequestParam(name = "start", required = false, defaultValue = "1")
                                 int start,
-                              @RequestParam(name = "capacity", required = false, defaultValue = "9999")
+                              @RequestParam(name = "capacity", required = false, defaultValue = "10")
                                 int capacity) {
-        LogListDomain logListDomain = systemLogService.findAllByIndexPage((start * capacity), capacity);
+        int startPage = (start - 1) * capacity;
+        if (startPage < 0) {
+            LogListDomain logListDomain = systemLogService.findAllByIndexPage(0, capacity);
+            return JsonUtil.toJson(logListDomain);
+        }
+        LogListDomain logListDomain = systemLogService.findAllByIndexPage(((start - 1) * capacity), capacity);
         return JsonUtil.toJson(logListDomain);
     }
 

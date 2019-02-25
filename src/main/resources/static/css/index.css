@@ -2,6 +2,10 @@ a {
     text-decoration: none;
 }
 
+.modal-fullscreen {
+    height: auto;
+}
+
 .nav-secondary {
     width: 80%;
     height: 50px;

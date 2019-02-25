@@ -1,3 +1,5 @@
+var isInitPager = false;
+
 // 废案 暂留
 function show(idn) {
     var id = "workContent" + idn;
@@ -46,14 +48,13 @@ function errorMessage(status, thrown) {
         }).show();
             break;
     }
-    // 将具体的异常放入异常面板好具体调试
-    $("#exp-text").text(thrown);
 }
 
 /**
  * 从服务器内存中读取日志（还未被添加至数据库时）
  */
 function readLogByServerRAM() {
+    disNonePaper();
     $.ajax({
         type: 'POST',
         url: "/log/readByRam",
@@ -129,18 +130,13 @@ function readLogByServerDB(startPage, capacity) {
                 "        <a href=\"#\" class=\"input-control-icon-right search-clear-btn\"><i class=\"icon icon-remove\"></i></a>" +
                 "      </div>\n" +
                 "      <h3>日志信息</h3>\n" +
-                "</header>" +
-                "</div>" +
-                "<ul id='myPager' class=\"pager\" data-ride=\"pager\" data-elements=\"first_icon\" data-elements=\"prev_icon\" data-elements=\"nav\" data-elements=\"next_icon\" data-elements=\"last_icon\" data-elements=\"goto\" data-elements=\"size_menu\" data-elements=\"space\" data-max-nav-count=\"10\" data-elements=\"total_text\" data-elements=\"page_of_total_text\" data-page=\"1\" data-rec-total=\"10\"></ul>" +
-                "</div>");
+                "</header>");
             var count = dataArray.count;
-            $('#myPager').pager({
-                page: 1,
+            $('#myPager').css("display","inline-block");
+            $('#myPager').data('zui.pager').set({
+                page: startPage,
                 recTotal: count,
-                recPerPage: 10,
-                maxNavCount: count / 10,
-                onPageChange: null,
-                onRender: null
+                recPerPage: capacity
             });
             $('#datagridExample').datagrid({
                 dataSource: {
@@ -171,20 +167,44 @@ function readLogByServerDB(startPage, capacity) {
     });
 }
 /**
+ * 初始化分页器
+ */
+
+function paperInit() {
+    $('#myPager').pager({
+        page: 1,
+        recTotal: 10,
+        recPerPage: 10,
+        maxNavCount: 10,
+        onPageChange: function (state, oldPage) {
+            if (state.page !== oldPage) {
+                onPageChange(state.page, state.recPerPage);
+            }
+        },
+        onRender: null,
+    });
+}
+
+/**
+ * 使分页器不可见
+ */
+function disNonePaper() {
+    $('#myPager').css("display","none");
+}
+/**
  * 当分页器页码变更时
  * @param Statu
  * @param recPerPage
  */
-function onPageChange() {
-    var myPager = $('#myPager').data('zui.pager');
-    var pageState = myPager.state;
-    readLogByServerDB(pageState.page, pageState.recPerPage);
+function onPageChange(page, capacity, recTotal) {
+    readLogByServerDB(page, capacity, recTotal);
 }
 
 /*
  * 查看所有的员工
  */
 function findAllEmp() {
+    disNonePaper();
     $.ajax({
         type: 'POST',
         url: "/emp/findAll",
@@ -277,6 +297,38 @@ function writeLogNowToDB() {
                 icon: 'check',
                 type: "success"
             }).show();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            errorMessage(XMLHttpRequest.status, errorThrown);
+        }
+    });
+}
+
+/**
+ * 获取新闻热点
+ */
+function getNews() {
+    $.ajax({
+        type: 'POST',
+        url: "/news/",
+        data: {},
+        dataType: "text",
+        success: function (data, textStatus) {
+            if (data === "获取数据失败！") {
+                new $.zui.Messager(data, {
+                    icon: 'frown',
+                    type: "danger"
+                }).show();
+                return;
+            }
+            var dataArray = $.parseJSON(data);
+            var text = "<div>";
+            for (var i = 0; i < dataArray.length; i++) {
+                text += "<a class='btn btn-link' target='_blank' style='font-size: 28px' href='" + dataArray[i].url + "'>" + dataArray[i].title + "</a></br>";
+            }
+            text += "</div>";
+            $("#news-text").html(text);
+            $("#modal-news").modal();
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             errorMessage(XMLHttpRequest.status, errorThrown);
