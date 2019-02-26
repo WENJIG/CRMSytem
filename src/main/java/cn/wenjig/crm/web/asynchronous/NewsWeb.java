@@ -5,6 +5,7 @@ import cn.wenjig.crm.data.domain.News;
 import cn.wenjig.crm.util.JsonUtil;
 import cn.wenjig.crm.web.BaseWeb;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;
@@ -59,6 +60,7 @@ public class NewsWeb extends BaseWeb {
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         webClient.getOptions().setTimeout(10000);
+        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
         HtmlPage htmlPage = null;
         try {
             htmlPage = webClient.getPage(url);

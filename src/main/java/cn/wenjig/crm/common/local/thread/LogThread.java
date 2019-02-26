@@ -19,7 +19,7 @@ public class LogThread {
 
     private ScheduledExecutorService scheduledThreadPool;
     private Queue<LogInfo> logInfoQueue = new ConcurrentLinkedQueue<>();
-
+    private Queue<LogInfo> backup = null;
     private final SystemLogService systemLogService;
 
     @Autowired
@@ -57,12 +57,10 @@ public class LogThread {
      */
     public void autoWriteToDB() {
         scheduledThreadPool.scheduleAtFixedRate(() -> {
-            Queue<LogInfo> backup = null;
             StringBuilder stringBuilder = new StringBuilder(DateUtil.getSystemPreciseDate1() + " " + Thread.currentThread().getName() + "日志写入开始:");
             try {
                 if (!logInfoQueue.isEmpty()) {
-                    // 备份一下将要写入数据库的日志
-                    backup = writeToDB();
+                    writeToDB();
                     stringBuilder.append("成功！本次写入 ").append(backup.size()).append(" 个日志信息");
                     System.out.println(stringBuilder.toString());
                 } else {
@@ -71,7 +69,6 @@ public class LogThread {
                 }
             }catch (Exception e) {
                 e.printStackTrace();
-                // 如果自动添加失败, 将备份的日志重新加入队列, 等待下次自动添加。 在加一个消息通知, 或者写入本地？
                 logInfoQueue.addAll(backup);
                 stringBuilder.append("失败！失败个数: ").append(backup.size());
                 System.err.println(stringBuilder.toString());
@@ -80,20 +77,19 @@ public class LogThread {
     }
 
     /**
-     * @Description: 将队列中的日志写入数据库
+     * @Description: 将队列中的日志写入数据库, 如果失败，将会备份失败的日志，等待下一次写入，失败原因一般都是表结构设计小了
      * @param
      * @Return void
      */
-    private Queue<LogInfo> writeToDB() throws Exception {
+    private void writeToDB() throws Exception {
         Queue<LogInfo> logInfos = new ConcurrentLinkedQueue<>(logInfoQueue);
         logInfoQueue.clear();
         try {
             systemLogService.addLog(logInfos);
         } catch (Exception e) {
             e.printStackTrace();
-            return logInfos;
+            backup = logInfos;
         }
-        return logInfos;
     }
 
     /**
