@@ -1,11 +1,11 @@
-CRMSytem<br/>
-     项目技术选型：springboot/jpa/security/thymeleaf/jquery/zui/mysql<br/>
-     |----CRMSytem.iml<br/>
-     |----mvnw<br/>
-     |----mvnw.cmd<br/>
-     |----pom.xml<br/>
-     |----src<br/>
-          |----main<br/>
+CRMSytem
+     项目技术选型：springboot/jpa/security/thymeleaf/jquery/zui/mysql
+     |----CRMSytem.iml
+     |----mvnw
+     |----mvnw.cmd
+     |----pom.xml
+     |----src
+          |----main
                |----java
                     |----cn
                          |----wenjig
